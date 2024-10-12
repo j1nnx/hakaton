@@ -84,14 +84,33 @@ def status(message):
 
     # Отправляем запрос к FastAPI для получения позиции пользователя в очереди
     try:
-        # Теперь передаем user_id как часть пути
         response = requests.get(f"{API_URL}/position/{user_id}")
 
         logging.info(f"Ответ от FastAPI: {response.status_code} - {response.text}")
 
         if response.status_code == 200:
             data = response.json()
-            bot.send_message(message.chat.id, f"Ваша позиция в очереди: {data['position']}")
+            user_position = data.get('position')
+
+            if user_position is not None:
+                # Получаем данные о времени и количестве касс
+                time_response = requests.get(f"{API_URL}/time/")
+                attractions_response = requests.get(f"{API_URL}/attractions/")
+
+                time_per_person = time_response.json().get("time", 2)  # Время на одного человека
+                number_of_attractions = attractions_response.json().get("number_attractions", 2)  # Количество терминалов
+
+                # Рассчитываем примерное время ожидания
+                if user_position > 1:
+                    wait_time = ((user_position - 1) * int(time_per_person)) / int(number_of_attractions)
+                else:
+                    wait_time = 0
+
+                # Отправляем сообщение с текущей позицией и временем ожидания
+                bot.send_message(message.chat.id, f"Ваша позиция в очереди: {user_position}\n"
+                                                  f"Примерное время ожидания: {int(wait_time)} минут.")
+            else:
+                bot.send_message(message.chat.id, "Вы не в очереди.")
         else:
             bot.send_message(message.chat.id, "Вы не в очереди.")
             print(f"Failed request with status code {response.status_code}")
@@ -100,6 +119,7 @@ def status(message):
     except Exception as e:
         logging.error(f"Ошибка при отправке запроса: {e}")
         bot.send_message(message.chat.id, "Не удалось получить ваш статус. Попробуйте позже.")
+
 
 
 @bot.message_handler(commands=['quit'])
