@@ -6,14 +6,31 @@ import telebot
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 # Настройки для бота
-BOT_TOKEN = '7833886320:AAE1Z9OQqA-YePBJ5EH9BQ6mo4qQhleLbBo'
+BOT_TOKEN = '8040546358:AAGP_zFqjFTJu65JylfiacNAQFrjHk2SSiw'
 API_URL = "http://localhost:8000"  # URL FastAPI
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
+title = "Текущее заголовок не установлен."
+time = 10
+
+
+@bot.message_handler(commands=['start'])
+def info(message):
+    user_id = message.from_user.id
+    username = message.from_user.username
+
+    logging.info(f"Приветствие пользователя с ID: {user_id}, Username: {username}")
+
+    # Приветственное сообщение с информацией о пользователе
+    bot.send_message(
+        message.chat.id,
+        f"Привет, {username}!\n\nВаш ID: {user_id}\nВы можете использовать команды: /join, /status, /quit."
+    )
+
 
 # Обработчик команды /start — регистрация пользователя в очереди
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=['join'])
 def start(message):
     user_id = message.from_user.id
     username = message.from_user.username
@@ -69,7 +86,10 @@ def status(message):
 @bot.message_handler(commands=['quit'])
 def remove_from_queue(message):
     user_id = message.from_user.id
-    logging.info(f"Удаление пользователя с ID: {user_id} из очереди")
+    username = message.from_user.username  # Получаем username
+
+    # Логируем ID пользователя и его имя (или None, если его нет)
+    logging.info(f"Удаление пользователя с ID: {user_id}, Username: {username} из очереди")
 
     # Отправляем запрос к FastAPI для удаления пользователя из очереди
     try:
@@ -78,9 +98,13 @@ def remove_from_queue(message):
 
         logging.info(f"Ответ от FastAPI: {response.status_code} - {response.text}")
 
+        # Проверяем, успешно ли удален пользователь
         if response.status_code == 200:
             data = response.json()
-            bot.send_message(message.chat.id, f"Статус: {data['message']}")
+
+            # Проверяем, есть ли username, если нет - выводим user_id
+            display_name = username if username else user_id
+            bot.send_message(message.chat.id, f"{display_name}, вы были удалены из очереди.\nСтатус: {data['message']}")
         else:
             bot.send_message(message.chat.id, "Не удалось удалить пользователя из очереди.")
             print(f"Failed request with status code {response.status_code}")
@@ -92,24 +116,24 @@ def remove_from_queue(message):
 
 
 # Обработчик команды /next — удаление первого пользователя из очереди
-@bot.message_handler(commands=['next'])
-def next_user(message):
-    try:
-        # Отправляем запрос к FastAPI для удаления первого пользователя из очереди
-        response = requests.delete(f"{API_URL}/next/")
-
-        logging.info(f"Ответ от FastAPI: {response.status_code} - {response.text}")
-
-        if response.status_code == 200:
-            bot.send_message(message.chat.id, response.json()["message"])
-        else:
-            bot.send_message(message.chat.id, "Очередь пуста или что-то пошло не так!")
-            print(f"Failed request with status code {response.status_code}")
-            print(f"Response text: {response.text}")
-
-    except Exception as e:
-        logging.error(f"Ошибка при отправке запроса: {e}")
-        bot.send_message(message.chat.id, "Не удалось удалить пользователя из очереди. Попробуйте позже.")
+# @bot.message_handler(commands=['next'])
+# def next_user(message):
+#     try:
+#         # Отправляем запрос к FastAPI для удаления первого пользователя из очереди
+#         response = requests.delete(f"{API_URL}/next/")
+#
+#         logging.info(f"Ответ от FastAPI: {response.status_code} - {response.text}")
+#
+#         if response.status_code == 200:
+#             bot.send_message(message.chat.id, response.json()["message"])
+#         else:
+#             bot.send_message(message.chat.id, "Очередь пуста или что-то пошло не так!")
+#             print(f"Failed request with status code {response.status_code}")
+#             print(f"Response text: {response.text}")
+#
+#     except Exception as e:
+#         logging.error(f"Ошибка при отправке запроса: {e}")
+#         bot.send_message(message.chat.id, "Не удалось удалить пользователя из очереди. Попробуйте позже.")
 
 
 # Основной цикл для запуска бота

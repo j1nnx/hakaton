@@ -4,6 +4,12 @@ from models import Queue, get_db
 
 app = FastAPI()
 
+# Переменная для хранения заголовка
+title = "Текущий заголовок не установлен."
+time = 10
+number_attractions = 3
+
+
 # Добавление пользователя в очередь
 @app.post("/add_to_queue/")
 def add_to_queue(user_id: int, username: str, db: Session = Depends(get_db)):
@@ -86,3 +92,43 @@ def get_all_queue(db: Session = Depends(get_db)):
     ]
 
     return {"queue": queue_list}
+
+
+# Получение текущего заголовка
+@app.get("/title/")
+def get_title():
+    return {"title": title}
+
+
+# Установка нового заголовка
+@app.post("/title/")
+def set_title(new_title: str):
+    global title
+    title = new_title
+    return {"message": f"Заголовок был изменен на: {title}"}
+
+
+@app.get("/time/")
+def get_time():
+    return {"time": time}
+
+
+# Установка нового заголовка
+@app.post("/time/")
+def set_time(new_time: str):
+    global time
+    time = new_time
+    return {"message": f"Максимальное время на человека: {time}"}
+
+
+@app.get("/attractions/")
+def get_number_attractions():
+    return {"number_attractions": number_attractions}
+
+
+# Установка нового заголовка
+@app.post("/attractions/")
+def set_number_attractions(attractions: str):
+    global number_attractions
+    number_attractions = attractions
+    return {"message": f"Количество терминалов: {number_attractions}"}
