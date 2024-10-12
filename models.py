@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 
 # Настройки подключения к базе данных PostgreSQL
-DATABASE_URL = "postgresql+psycopg2://your_db_user:your_db_password@localhost/queue_bot_db"
+DATABASE_URL = "postgresql+psycopg2://postgres:123456@localhost:5432/postgres"
 
 # Создание базового класса для модели
 Base = declarative_base()
