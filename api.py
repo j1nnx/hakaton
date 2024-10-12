@@ -60,6 +60,7 @@ def remove_first_from_queue(db: Session = Depends(get_db)):
     return {"message": "Queue is empty."}
 
 
+# Удаление пользователя из очереди
 @app.delete("/remove_from_queue/{user_id}")
 def remove_from_queue(user_id: int, db: Session = Depends(get_db)):
     # Ищем пользователя в базе данных по его user_id
@@ -69,10 +70,18 @@ def remove_from_queue(user_id: int, db: Session = Depends(get_db)):
         # Удаляем пользователя из очереди
         db.delete(user)
         db.commit()
+
+        # Пересчитываем позиции для всех пользователей, которые идут после удаленного
+        remaining_users = db.query(Queue).filter(Queue.position > user.position).all()
+        for remaining_user in remaining_users:
+            remaining_user.position -= 1
+        db.commit()
+
         return {"message": f"Пользователь с ID {user_id} был удален из очереди."}
     else:
         # Если пользователя нет в базе
         return {"message": f"Пользователь с ID {user_id} не найден в очереди."}
+
 
 
 # Получение всех участников очереди
