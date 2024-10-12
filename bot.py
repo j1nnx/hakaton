@@ -12,11 +12,10 @@ API_URL = "http://localhost:8000"  # URL FastAPI
 bot = telebot.TeleBot(BOT_TOKEN)
 
 title = "Текущее заголовок не установлен."
-time = 10
 
 
 @bot.message_handler(commands=['start'])
-def info(message):
+def start(message):
     user_id = message.from_user.id
     username = message.from_user.username
 
@@ -31,21 +30,41 @@ def info(message):
 
 # Обработчик команды /start — регистрация пользователя в очереди
 @bot.message_handler(commands=['join'])
-def start(message):
+def join(message):
     user_id = message.from_user.id
     username = message.from_user.username
 
     logging.info(f"Добавление пользователя в очередь: {username} (ID: {user_id})")
 
-    # Отправляем запрос к FastAPI для добавления пользователя в очередь
     try:
-        # Исправленный запрос с параметрами в query строке
+        # Отправляем запрос к FastAPI для добавления пользователя в очередь
         response = requests.post(f"{API_URL}/add_to_queue/?user_id={user_id}&username={username}")
 
         logging.info(f"Ответ от FastAPI: {response.status_code} - {response.text}")
 
         if response.status_code == 200:
-            bot.send_message(message.chat.id, response.json()["message"])
+            # Получаем текущую позицию пользователя в очереди
+            position_response = requests.get(f"{API_URL}/position/{user_id}")
+            position_data = position_response.json()
+            user_position = position_data.get("position")
+
+            # Получаем данные о времени и количестве касс
+            time_response = requests.get(f"{API_URL}/time/")
+            attractions_response = requests.get(f"{API_URL}/attractions/")
+
+            time_per_person = time_response.json().get("time", 10)  # Время на одного человека
+            number_of_attractions = attractions_response.json().get("number_attractions", 3)  # Количество терминалов
+
+            # Рассчитываем ожидаемое время
+            if user_position > 1:
+                wait_time = ((user_position - 1) * time_per_person) / number_of_attractions
+            else:
+                wait_time = 0
+
+            # Отправляем сообщение пользователю с его позицией и временем ожидания
+            bot.send_message(message.chat.id, f"{response.json()['message']}\n"
+                                             f"Ваша позиция в очереди: {user_position}\n"
+                                             f"Примерное время ожидания: {int(wait_time)} минут.")
         else:
             bot.send_message(message.chat.id, "Что-то пошло не так!")
             # Дополнительная информация об ошибке
@@ -55,6 +74,7 @@ def start(message):
     except Exception as e:
         logging.error(f"Ошибка при отправке запроса: {e}")
         bot.send_message(message.chat.id, "Не удалось добавить вас в очередь. Попробуйте позже.")
+
 
 
 # Обработчик команды /status — проверка текущего статуса пользователя в очереди
