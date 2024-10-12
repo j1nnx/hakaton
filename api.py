@@ -83,7 +83,6 @@ def remove_from_queue(user_id: int, db: Session = Depends(get_db)):
         return {"message": f"Пользователь с ID {user_id} не найден в очереди."}
 
 
-
 # Получение всех участников очереди
 @app.get("/all_queue/")
 def get_all_queue(db: Session = Depends(get_db)):

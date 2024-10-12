@@ -63,8 +63,8 @@ def join(message):
 
             # Отправляем сообщение пользователю с его позицией и временем ожидания
             bot.send_message(message.chat.id, f"{response.json()['message']}\n"
-                                             f"Ваша позиция в очереди: {user_position}\n"
-                                             f"Примерное время ожидания: {int(wait_time)} минут.")
+                                              f"Ваша позиция в очереди: {user_position}\n"
+                                              f"Примерное время ожидания: {int(wait_time)} минут.")
         else:
             bot.send_message(message.chat.id, "Что-то пошло не так!")
             # Дополнительная информация об ошибке
@@ -74,7 +74,6 @@ def join(message):
     except Exception as e:
         logging.error(f"Ошибка при отправке запроса: {e}")
         bot.send_message(message.chat.id, "Не удалось добавить вас в очередь. Попробуйте позже.")
-
 
 
 # Обработчик команды /status — проверка текущего статуса пользователя в очереди

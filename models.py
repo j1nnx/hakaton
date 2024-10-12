@@ -9,6 +9,7 @@ DATABASE_URL = "postgresql+psycopg2://postgres:123456@localhost:5432/postgres"
 # Создание базового класса для модели
 Base = declarative_base()
 
+
 # Определение модели Queue
 class Queue(Base):
     __tablename__ = "queue"
@@ -19,6 +20,7 @@ class Queue(Base):
     position = Column(Integer, nullable=False)
     created_at = Column(TIMESTAMP, default=datetime.utcnow)
 
+
 # Создание подключения к базе данных
 engine = create_engine(DATABASE_URL)
 
@@ -27,6 +29,7 @@ Base.metadata.create_all(engine)
 
 # Создание сессии для работы с базой данных
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 
 # Функция для получения сессии к базе данных
 def get_db():
