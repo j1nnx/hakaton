@@ -4,7 +4,6 @@ from models import Queue, get_db
 
 app = FastAPI()
 
-
 # Добавление пользователя в очередь
 @app.post("/add_to_queue/")
 def add_to_queue(user_id: int, username: str, db: Session = Depends(get_db)):
@@ -53,3 +52,22 @@ def remove_first_from_queue(db: Session = Depends(get_db)):
 
         return {"message": "First user removed from queue, remaining positions updated."}
     return {"message": "Queue is empty."}
+
+
+# Получение всех участников очереди
+@app.get("/all_queue/")
+def get_all_queue(db: Session = Depends(get_db)):
+    # Получаем всех пользователей, отсортированных по позиции в очереди
+    users_in_queue = db.query(Queue).order_by(Queue.position.asc()).all()
+
+    # Если очередь пуста
+    if not users_in_queue:
+        return {"message": "Queue is empty."}
+
+    # Формируем список участников
+    queue_list = [
+        {"user_id": user.user_id, "username": user.username, "position": user.position}
+        for user in users_in_queue
+    ]
+
+    return {"queue": queue_list}

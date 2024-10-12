@@ -1,66 +1,88 @@
 import logging
-from telegram import Update
-from telegram.ext import Updater, CommandHandler, CallbackContext
 import requests
+import telebot
 
-    # Логирование
+# Логирование
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-    # Настройки для бота
-BOT_TOKEN = 'YOUR_TELEGRAM_BOT_TOKEN'
+# Настройки для бота
+BOT_TOKEN = '7833886320:AAE1Z9OQqA-YePBJ5EH9BQ6mo4qQhleLbBo'
 API_URL = "http://localhost:8000"  # URL FastAPI
 
-    # Команда /start — регистрация пользователя в очереди
-def start(update: Update, context: CallbackContext):
-        user = update.effective_user
-        user_id = user.id
-        username = user.username
+bot = telebot.TeleBot(BOT_TOKEN)
 
-        # Отправляем запрос к FastAPI для добавления пользователя в очередь
-        response = requests.post(f"{API_URL}/add_to_queue/", json={"user_id": user_id, "username": username})
+# Обработчик команды /start — регистрация пользователя в очереди
+@bot.message_handler(commands=['start'])
+def start(message):
+    user_id = message.from_user.id
+    username = message.from_user.username
+
+    logging.info(f"Добавление пользователя в очередь: {username} (ID: {user_id})")
+
+    # Отправляем запрос к FastAPI для добавления пользователя в очередь
+    try:
+        # Исправленный запрос с параметрами в query строке
+        response = requests.post(f"{API_URL}/add_to_queue/?user_id={user_id}&username={username}")
+
+        logging.info(f"Ответ от FastAPI: {response.status_code} - {response.text}")
 
         if response.status_code == 200:
-            update.message.reply_text(response.json()["message"])
+            bot.send_message(message.chat.id, response.json()["message"])
         else:
-            update.message.reply_text("Something went wrong!")
+            bot.send_message(message.chat.id, "Что-то пошло не так!")
+            # Дополнительная информация об ошибке
+            print(f"Failed request with status code {response.status_code}")
+            print(f"Response text: {response.text}")
 
-    # Команда /status — проверка текущего статуса в очереди
-def status(update: Update, context: CallbackContext):
-        user = update.effective_user
-        user_id = user.id
+    except Exception as e:
+        logging.error(f"Ошибка при отправке запроса: {e}")
+        bot.send_message(message.chat.id, "Не удалось добавить вас в очередь. Попробуйте позже.")
 
-        # Отправляем запрос к FastAPI для получения позиции пользователя в очереди
+# Обработчик команды /status — проверка текущего статуса пользователя в очереди
+@bot.message_handler(commands=['status'])
+def status(message):
+    user_id = message.from_user.id
+    logging.info(f"Проверка статуса для пользователя с ID: {user_id}")
+
+    # Отправляем запрос к FastAPI для получения позиции пользователя в очереди
+    try:
+        # Теперь передаем user_id как часть пути
         response = requests.get(f"{API_URL}/position/{user_id}")
+
+        logging.info(f"Ответ от FastAPI: {response.status_code} - {response.text}")
 
         if response.status_code == 200:
             data = response.json()
-            update.message.reply_text(f"Your position in the queue is: {data['position']}")
+            bot.send_message(message.chat.id, f"Ваша позиция в очереди: {data['position']}")
         else:
-            update.message.reply_text("You are not in the queue.")
+            bot.send_message(message.chat.id, "Вы не в очереди.")
+            print(f"Failed request with status code {response.status_code}")
+            print(f"Response text: {response.text}")
 
-    # Команда /next — продвижение по очереди (удаляет первого пользователя)
-def next(update: Update, context: CallbackContext):
+    except Exception as e:
+        logging.error(f"Ошибка при отправке запроса: {e}")
+        bot.send_message(message.chat.id, "Не удалось получить ваш статус. Попробуйте позже.")
+
+# Обработчик команды /next — удаление первого пользователя из очереди
+@bot.message_handler(commands=['next'])
+def next_user(message):
+    try:
         # Отправляем запрос к FastAPI для удаления первого пользователя из очереди
         response = requests.delete(f"{API_URL}/next/")
 
+        logging.info(f"Ответ от FastAPI: {response.status_code} - {response.text}")
+
         if response.status_code == 200:
-            update.message.reply_text(response.json()["message"])
+            bot.send_message(message.chat.id, response.json()["message"])
         else:
-            update.message.reply_text("Queue is empty or something went wrong!")
+            bot.send_message(message.chat.id, "Очередь пуста или что-то пошло не так!")
+            print(f"Failed request with status code {response.status_code}")
+            print(f"Response text: {response.text}")
 
-    # Основной блок для запуска бота
-def main():
-    updater = Updater(BOT_TOKEN, use_context=True)
-    dispatcher = updater.dispatcher
+    except Exception as e:
+        logging.error(f"Ошибка при отправке запроса: {e}")
+        bot.send_message(message.chat.id, "Не удалось удалить пользователя из очереди. Попробуйте позже.")
 
-        # Обработчики команд
-    dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CommandHandler("status", status))
-    dispatcher.add_handler(CommandHandler("next", next))
-
-        # Запуск бота
-    updater.start_polling()
-    updater.idle()
-
-    if __name__ == '__main__':
-        main()
+# Основной цикл для запуска бота
+if __name__ == '__main__':
+    bot.polling(none_stop=True, interval=0)
