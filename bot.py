@@ -52,12 +52,12 @@ def join(message):
             time_response = requests.get(f"{API_URL}/time/")
             attractions_response = requests.get(f"{API_URL}/attractions/")
 
-            time_per_person = time_response.json().get("time", 10)  # Время на одного человека
-            number_of_attractions = attractions_response.json().get("number_attractions", 3)  # Количество терминалов
+            time_per_person = time_response.json().get("time", 2)  # Время на одного человека
+            number_of_attractions = attractions_response.json().get("number_attractions", 2)  # Количество терминалов
 
             # Рассчитываем ожидаемое время
             if user_position > 1:
-                wait_time = ((user_position - 1) * time_per_person) / number_of_attractions
+                wait_time = ((user_position - 1) * int(time_per_person)) / int(number_of_attractions)
             else:
                 wait_time = 0
 

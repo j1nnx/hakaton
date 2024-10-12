@@ -6,8 +6,8 @@ app = FastAPI()
 
 # Переменная для хранения заголовка
 title = "Текущий заголовок не установлен."
-time = 10
-number_attractions = 3
+time = 1
+number_attractions = 1
 
 
 # Добавление пользователя в очередь
@@ -121,7 +121,6 @@ def get_time():
     return {"time": time}
 
 
-# Установка нового заголовка
 @app.post("/time/")
 def set_time(new_time: str):
     global time
@@ -134,7 +133,6 @@ def get_number_attractions():
     return {"number_attractions": number_attractions}
 
 
-# Установка нового заголовка
 @app.post("/attractions/")
 def set_number_attractions(attractions: str):
     global number_attractions
