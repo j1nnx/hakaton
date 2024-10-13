@@ -115,7 +115,8 @@ def status(message):
                 attractions_response = requests.get(f"{API_URL}/attractions/")
 
                 time_per_person = time_response.json().get("time", 2)  # Время на одного человека
-                number_of_attractions = attractions_response.json().get("number_attractions", 2)  # Количество терминалов
+                number_of_attractions = attractions_response.json().get("number_attractions",
+                                                                        2)  # Количество терминалов
 
                 # Рассчитываем примерное время ожидания
                 if user_position > 1:
@@ -136,7 +137,6 @@ def status(message):
     except Exception as e:
         logging.error(f"Ошибка при отправке запроса: {e}")
         bot.send_message(message.chat.id, "Не удалось получить ваш статус. Попробуйте позже.")
-
 
 
 @bot.message_handler(commands=['quit'])
