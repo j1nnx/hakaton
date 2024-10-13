@@ -16,9 +16,10 @@ COPY . .
 # Build the React app for production
 RUN npm run build
 
+COPY /image /app/dist/image
+
 # Use Nginx to serve the app
 FROM nginx:alpine
-
 # Copy the built files from the build stage
 COPY --from=build /app/dist /usr/share/nginx/html
 
