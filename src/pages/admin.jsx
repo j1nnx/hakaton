@@ -8,7 +8,7 @@ export const AdminPage = () => {
     let login = 'Ivan1998';  // Пример логина
 
     // URL вашего FastAPI сервера
-    const API_URL = "http://localhost:8000";
+    const API_URL = "http://89.169.148.143:8000";
 
     // useEffect для получения заголовка
     useEffect(() => {
@@ -98,13 +98,13 @@ export const AdminPage = () => {
                 "Content-Type": "application/x-www-form-urlencoded",
             },
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log("Time updated:", data.message);
-        })
-        .catch(error => {
-            console.error("There was an error updating time:", error);
-        });
+            .then(response => response.json())
+            .then(data => {
+                console.log("Time updated:", data.message);
+            })
+            .catch(error => {
+                console.error("There was an error updating time:", error);
+            });
     };
 
     // Функция для обновления количества ПК/терминалов
@@ -119,13 +119,13 @@ export const AdminPage = () => {
                 "Content-Type": "application/x-www-form-urlencoded",
             },
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log("PC count updated:", data.message);
-        })
-        .catch(error => {
-            console.error("There was an error updating PC count:", error);
-        });
+            .then(response => response.json())
+            .then(data => {
+                console.log("PC count updated:", data.message);
+            })
+            .catch(error => {
+                console.error("There was an error updating PC count:", error);
+            });
     };
 
     // Функция для обновления названия
@@ -140,13 +140,13 @@ export const AdminPage = () => {
                 "Content-Type": "application/x-www-form-urlencoded",
             },
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log("Title updated:", data.message);
-        })
-        .catch(error => {
-            console.error("There was an error updating title:", error);
-        });
+            .then(response => response.json())
+            .then(data => {
+                console.log("Title updated:", data.message);
+            })
+            .catch(error => {
+                console.error("There was an error updating title:", error);
+            });
     };
 
     // Функция для удаления пользователя
@@ -158,28 +158,28 @@ export const AdminPage = () => {
                 "Content-Type": "application/json",
             },
         })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error('Failed to remove user');
-            }
-        })
-        .then(data => {
-            console.log(data.message);
-            // Перезагружаем страницу после успешного удаления пользователя
-            window.location.href = window.location.href;
-        })
-        .catch(error => {
-            console.error("There was an error removing the user:", error);
-            window.location.href = window.location.href;
-        });
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Failed to remove user');
+                }
+            })
+            .then(data => {
+                console.log(data.message);
+                // Перезагружаем страницу после успешного удаления пользователя
+                window.location.href = window.location.href;
+            })
+            .catch(error => {
+                console.error("There was an error removing the user:", error);
+                window.location.href = window.location.href;
+            });
     };
 
     return (
         <main className='main-admin'>
             <header className='main__header'>
-                <img src="../image/logo.png" alt="Digital Queue" className='main__header-logo' />
+                <img src="./image/logo.png" alt="Digital Queue" className='main__header-logo' />
                 <div className="main__header-wrapper">
                     {/* Обработчик изменения заголовка */}
                     <input
