@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 from models import Queue, get_db
+import requests
 
 app = FastAPI()
 
@@ -40,13 +41,20 @@ def get_position(user_id: int, db: Session = Depends(get_db)):
     return {"message": "User not found in queue."}
 
 
-# Удаление первого пользователя из очереди
+# Удаление первого пользователя из очереди и уведомление нового первого пользователя
 @app.delete("/next/")
 def remove_first_from_queue(db: Session = Depends(get_db)):
+    global number_attractions  # Используем глобальную переменную number_attractions
+
     # Получаем первого пользователя в очереди
     first_in_queue = db.query(Queue).order_by(Queue.position.asc()).first()
 
     if first_in_queue:
+        # Сохраняем данные удаляемого пользователя для логов
+        removed_user_id = first_in_queue.user_id
+        removed_username = first_in_queue.username
+
+        # Удаляем первого пользователя из очереди
         db.delete(first_in_queue)
         db.commit()
 
@@ -56,17 +64,31 @@ def remove_first_from_queue(db: Session = Depends(get_db)):
             user.position -= 1
         db.commit()
 
-        return {"message": "First user removed from queue, remaining positions updated."}
+        # Пытаемся найти пользователя на позиции number_attractions
+        user_to_notify = db.query(Queue).filter(Queue.position == number_attractions).first()
+
+        if user_to_notify:
+            # Уведомляем пользователя на позиции number_attractions через Telegram
+            send_message_to_user(user_to_notify.user_id, user_to_notify.username)
+
+        return {
+            "message": f"User {removed_username} (ID: {removed_user_id}) removed from queue. Remaining positions updated."
+        }
+
     return {"message": "Queue is empty."}
 
 
 # Удаление пользователя из очереди
 @app.delete("/remove_from_queue/{user_id}")
 def remove_from_queue(user_id: int, db: Session = Depends(get_db)):
+    global number_attractions  # Получаем текущее значение number_attractions
+
     # Ищем пользователя в базе данных по его user_id
     user = db.query(Queue).filter(Queue.user_id == user_id).first()
 
     if user:
+        user_position = user.position
+
         # Удаляем пользователя из очереди
         db.delete(user)
         db.commit()
@@ -76,6 +98,15 @@ def remove_from_queue(user_id: int, db: Session = Depends(get_db)):
         for remaining_user in remaining_users:
             remaining_user.position -= 1
         db.commit()
+
+        # Проверяем, если позиция удаляемого пользователя меньше или равна number_attractions
+        if user_position <= number_attractions:
+            # Пытаемся найти пользователя на позиции number_attractions после пересчета позиций
+            user_to_notify = db.query(Queue).filter(Queue.position == number_attractions).first()
+
+            if user_to_notify:
+                # Уведомляем пользователя на позиции number_attractions через Telegram
+                send_message_to_user(user_to_notify.user_id, user_to_notify.username)
 
         return {"message": f"Пользователь с ID {user_id} был удален из очереди."}
     else:
@@ -138,3 +169,29 @@ def set_number_attractions(attractions: str):
     global number_attractions
     number_attractions = attractions
     return {"message": f"Количество терминалов: {number_attractions}"}
+
+
+# Функция для отправки уведомления через Telegram
+def send_message_to_user(user_id: int, username: str):
+    # Укажите токен вашего бота и создайте URL для отправки сообщения
+    BOT_TOKEN = '8040546358:AAGP_zFqjFTJu65JylfiacNAQFrjHk2SSiw'  # Замените на реальный токен вашего бота
+    TELEGRAM_API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+
+    # Формируем сообщение для первого пользователя
+    message_text = f"Привет, {username}! Вы теперь первый в очереди. Подходите к терминалу."
+
+    # Данные для запроса
+    payload = {
+        "chat_id": user_id,  # Telegram ID пользователя
+        "text": message_text
+    }
+
+    # Отправляем запрос на сервер Telegram
+    try:
+        response = requests.post(TELEGRAM_API_URL, json=payload)
+        if response.status_code == 200:
+            print(f"Сообщение отправлено пользователю {username} (ID: {user_id})")
+        else:
+            print(f"Ошибка при отправке сообщения: {response.text}")
+    except Exception as e:
+        print(f"Ошибка при отправке сообщения: {e}")

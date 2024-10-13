@@ -73,10 +73,16 @@ def join(message):
             else:
                 wait_time = 0
 
-            # Отправляем сообщение пользователю с его позицией и временем ожидания
-            bot.send_message(message.chat.id, f"Вы вошли в очередь!\n"
-                                              f"Ваша позиция: {user_position}\n"
-                                              f"Примерное время ожидания: {int(wait_time)} минут.")
+            # Если время ожидания равно 0, говорим пользователю подходить к терминалу
+            if wait_time == 0:
+                bot.send_message(message.chat.id, f"Вы вошли в очередь!\n"
+                                                  f"Ваша позиция: {user_position}\n"
+                                                  f"Подходите к терминалу!")
+            else:
+                # Отправляем сообщение пользователю с его позицией и временем ожидания
+                bot.send_message(message.chat.id, f"Вы вошли в очередь!\n"
+                                                  f"Ваша позиция: {user_position}\n"
+                                                  f"Примерное время ожидания: {int(wait_time)} минут.")
         else:
             bot.send_message(message.chat.id, "Что-то пошло не так!")
             logging.error(f"Failed request with status code {response.status_code}")
