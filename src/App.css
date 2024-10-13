@@ -416,6 +416,17 @@ body {
     padding: 0 8px;
     color: #fff;
 }
+
+.delete_user {
+    background: #4f9481;
+    border: none;
+    color: #fff;
+    padding: 3px 5px;
+    border-radius: 5px;
+    font-family: 'Codec Pro', sans-serif;
+    cursor: pointer;
+}
+
 /* 
 @media (min-width: 900px) and (max-width: 950px) {
 
