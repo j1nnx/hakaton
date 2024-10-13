@@ -17,7 +17,7 @@ export const AuthPage = () => {
                 <form action="#" method="post" className="auth__form">
                     <input type="text" className="auth__login input__optional" placeholder="Логин"/>
                     <input type="password" className="auth__password input__optional" placeholder="Пароль"/>
-                    <button type="submit" className="auth__button">войти</button>
+                    <a href="/admin" className="auth__button">войти</a>
                 </form>
             </div>
 

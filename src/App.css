@@ -19,7 +19,7 @@ body {
     justify-content: space-between;
     align-items: center;
     width: 100vw;
-    height: 100.1vh;
+    height: 100vh;
     background: rgb(39,37,37);
     background: linear-gradient(68deg, rgba(39,37,37,1) 0%, rgba(0,64,46,1) 65%);
 }
@@ -34,7 +34,7 @@ body {
     padding-right: 10%;
 }
 .main__header-logo {
-    width: 24%;
+    width: 16%;
 }
 .main__header-title {
     font-family: "Arboria-Book";
@@ -149,7 +149,7 @@ body {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    width: 70%;
+    width: fit-content;
     height: 55%;
     background: #145c48;
     border-radius: 15px;
@@ -180,13 +180,15 @@ body {
 }
 
 .auth__form {
+    padding-top: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: 10px;
     width: 100%;
     height: 40%;
+    
 }
 
 .input__optional {
@@ -205,8 +207,14 @@ body {
     border: none;
     color: #fff;
     width: 28%;
-    height: 15%;
+    height: 30px;
     border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    font-family: 'Codec Pro', sans-serif;
+    margin-top: 10px;
 }
 /* ------------------------------------------------Admin Panel------------------------------------------------------ */
 
@@ -217,7 +225,7 @@ body {
     justify-content: space-between;
     align-items: center;
     width: 100vw;
-    height: 100.1vh;
+    height: 100vh;
     background: rgb(39,37,37);
     background: linear-gradient(68deg, rgba(39,37,37,1) 0%, rgba(0,64,46,1) 65%);
     
@@ -228,7 +236,7 @@ body {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 88%;
+    height: calc(85% - 32px);
 }
 
 .main__header-title-admin {
@@ -324,6 +332,7 @@ body {
 }
 .admin-img {
     width: 12%;
+    max-width: 40px;
     height: 75%;
 }
 
@@ -399,7 +408,7 @@ body {
 }
 
 .info-input {
-    width: 60px;
+    width: 80px;
     font-size: 30px;
     border: none;
     border-radius: 15px;
@@ -407,12 +416,9 @@ body {
     padding: 0 8px;
     color: #fff;
 }
-
+/* 
 @media (min-width: 900px) and (max-width: 950px) {
 
-    .main_change-block-lineOr {
-        display: none;
-    }
 
     .main__change-block {
         width: 100%;
@@ -442,10 +448,9 @@ body {
     .text-user {
         font-size: 44px;
     }
-}
+} */
 
-
-@media (min-width: 760px) {
+@media (min-width: 500px) {
     .main_change-block-lineOr {
         display: none;
     }
@@ -453,24 +458,20 @@ body {
     .main__change-block {
         display: flex;
         flex-direction: row;
+    }
+
+    .main__header {
         justify-content: center;
-        align-items: center;
     }
 
-    .main__header-logo {
-        width: 15%;
-    }
-
-    .change-block-user__select {
-
-    }
-
-    .option-img {
-        width: 100%;
-    }
 }
 
+@media (max-width: 500px) {
+    .main__header-title {
+        font-size: 24px;
 
-
-
-
+        &:before {
+            top: 30px;
+        }
+    }
+}
