@@ -168,17 +168,18 @@ export const AdminPage = () => {
         .then(data => {
             console.log(data.message);
             // Перезагружаем страницу после успешного удаления пользователя
-            window.location.reload();
+            window.location.href = window.location.href;
         })
         .catch(error => {
             console.error("There was an error removing the user:", error);
+            window.location.href = window.location.href;
         });
     };
 
     return (
         <main className='main-admin'>
             <header className='main__header'>
-                <img src="./image/logo.png" alt="Digital Queue" className='main__header-logo' />
+                <img src="../image/logo.png" alt="Digital Queue" className='main__header-logo' />
                 <div className="main__header-wrapper">
                     {/* Обработчик изменения заголовка */}
                     <input
