@@ -34,10 +34,22 @@ def join(message):
     user_id = message.from_user.id
     username = message.from_user.username
 
-    logging.info(f"Добавление пользователя в очередь: {username} (ID: {user_id})")
+    logging.info(f"Проверка и добавление пользователя в очередь: {username} (ID: {user_id})")
 
     try:
-        # Отправляем запрос к FastAPI для добавления пользователя в очередь
+        # Сначала проверяем, есть ли пользователь уже в очереди
+        position_response = requests.get(f"{API_URL}/position/{user_id}")
+
+        if position_response.status_code == 200:
+            # Пользователь уже в очереди, получаем его позицию
+            position_data = position_response.json()
+            user_position = position_data.get("position")
+
+            if user_position is not None:
+                bot.send_message(message.chat.id, f"Вы уже находитесь в очереди, ваша позиция: {user_position}")
+                return  # Прерываем выполнение, если пользователь уже в очереди
+
+        # Если пользователь не в очереди, добавляем его
         response = requests.post(f"{API_URL}/add_to_queue/?user_id={user_id}&username={username}")
 
         logging.info(f"Ответ от FastAPI: {response.status_code} - {response.text}")
@@ -62,14 +74,13 @@ def join(message):
                 wait_time = 0
 
             # Отправляем сообщение пользователю с его позицией и временем ожидания
-            bot.send_message(message.chat.id, f"{response.json()['message']}\n"
-                                              f"Ваша позиция в очереди: {user_position}\n"
+            bot.send_message(message.chat.id, f"Вы вошли в очередь!\n"
+                                              f"Ваша позиция: {user_position}\n"
                                               f"Примерное время ожидания: {int(wait_time)} минут.")
         else:
             bot.send_message(message.chat.id, "Что-то пошло не так!")
-            # Дополнительная информация об ошибке
-            print(f"Failed request with status code {response.status_code}")
-            print(f"Response text: {response.text}")
+            logging.error(f"Failed request with status code {response.status_code}")
+            logging.error(f"Response text: {response.text}")
 
     except Exception as e:
         logging.error(f"Ошибка при отправке запроса: {e}")
