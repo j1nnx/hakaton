@@ -14,6 +14,18 @@ bot = telebot.TeleBot(BOT_TOKEN)
 title = "Текущее заголовок не установлен."
 
 
+# Обработчик команды /help — инструкция по использованию команд
+@bot.message_handler(commands=['help'])
+def help_message(message):
+    help_text = """
+    Список команд бота:
+/join - Добавить вас в очередь.
+/status - Проверить ваш текущий статус в очереди.
+/quit - Удалить вас из очереди.
+    """
+    bot.send_message(message.chat.id, help_text)
+
+
 @bot.message_handler(commands=['start'])
 def start(message):
     user_id = message.from_user.id
@@ -24,7 +36,11 @@ def start(message):
     # Приветственное сообщение с информацией о пользователе
     bot.send_message(
         message.chat.id,
-        f"Привет, {username}!\n\nВаш ID: {user_id}\nВы можете использовать команды: /join, /status, /quit."
+        f"Привет, {username}!\n\nВаш ID: {user_id}\nВы можете использовать команды: "
+        f"\n/join-встать в очередь\n"
+        f"/status - посмотреть место в очереди\n"
+        f"/quit - выйти из очереди\n"
+        f"/help - посмотреть список команд"
     )
 
 
