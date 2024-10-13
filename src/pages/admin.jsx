@@ -4,14 +4,14 @@ export const AdminPage = () => {
     let ProjectName = document.getElementsByClassName('main__header-title-admin').value
     let login = 'Ivan1998';
     let count = [
-        {name: 'Ivan', surname: 'Ivanov',id: '@User'}, 
-        {name: 'Ivan', surname: 'Ivanov',id: '@User'}, 
-        {name: 'Ivan', surname: 'Ivanov',id: '@User'},
-        {name: 'Ivan', surname: 'Ivanov',id: '@User'},
-        {name: 'Ivan', surname: 'Ivanov',id: '@User'},
-        {name: 'Ivan', surname: 'Ivanov',id: '@User'},
-        {name: 'Ivan', surname: 'Ivanov',id: '@User'},
-        {name: 'Ivan', surname: 'Ivanov',id: '@User'}
+        {name: 'Ivan', surname: 'Ivanov',id: '52'}, 
+        {name: 'Ivan', surname: 'Ivanov',id: '52'}, 
+        {name: 'Ivan', surname: 'Ivanov',id: '52'},
+        {name: 'Ivan', surname: 'Ivanov',id: '52'},
+        {name: 'Ivan', surname: 'Ivanov',id: '52'},
+        {name: 'Ivan', surname: 'Ivanov',id: '52'},
+        {name: 'Ivan', surname: 'Ivanov',id: '52'},
+        {name: 'Ivan', surname: 'Ivanov',id: '52'}
     ];
 
 
@@ -26,8 +26,8 @@ export const AdminPage = () => {
 
         <div className="main__AdminWrapper">
             <div className="main__admin-settings">
-                <p className="setting-text fz-long before1">Время на 1 человека: {time} мин.</p>
-                <p className="setting-text before2">Кол-во стендов/ПК: {PcCount} шт.</p>
+                <p className="setting-text fz-long">Время на 1 человека: <input type='number' className='info-input' defaultValue={time} /> мин.</p>
+                <p className="setting-text">Кол-во стендов/ПК: <input type='number' className='info-input' defaultValue={PcCount}/> шт.</p>
             </div>
 
 
@@ -37,18 +37,21 @@ export const AdminPage = () => {
                 <div className="UlListWrapper">
                     <ul className="main__table-list">
                         <div className="table-list__legend">     
-                            <div className="legend-option"><span>Имя</span></div>
-                            <div className="legend-option flex-end"><span>номер</span></div>
-                            <div className="legend-option flex-end"><span>@id</span></div>
+                            <div className="legend-option "><span>-</span></div>
+                            <div className="legend-option "><span>Имя</span></div>
+                            <div className="legend-option "><span>№</span></div>
                             <div className="legend-option"><span>-</span></div>
                         </div>
                         {count.map((e, idx) => (
                             <li className="table-li" key={idx}>
-                                <div className={`${idx % 2 === 0 ? 'green-black position' : 'green-white position'}`}>
-                                    <span className="UserNames">{e.name} {e.surname}</span> 
-                                    <span className="UserPlaceCount">{idx + 1}</span>
-                                    <span className="UserTgId">{e.id}</span>
-                                    <button>D</button>
+                                <div className={`${idx % 2 === 0 ? 'green-white position' : 'green-black position'}`}>
+                                   <div className="legend-wrapper"> <span className="UserPlaceCount">#{idx + 1}</span> </div>
+
+                                    <div className="legend-wrapper"><span className="UserNames">{e.name} {e.surname}</span> </div>
+
+                                    <div className="legend-wrapper"><span className="UserTgId">{e.id}</span></div>
+
+                                    <div className="legend-wrapper"><button>D</button></div>
                                     </div>
                             </li>
                         ))}
