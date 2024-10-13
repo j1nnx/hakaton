@@ -5,7 +5,7 @@ export const AdminPage = () => {
     let [title, setTitle] = useState(""); // Стейт для заголовка
     let [pcCount, setPcCount] = useState(1); // Стейт для количества ПК/терминалов
     let [users, setUsers] = useState([]); // Стейт для списка участников
-    let login = 'Ivan1998';  // Пример логина
+    let login = 'Ivan1998';  
 
     // URL вашего FastAPI сервера
     const API_URL = "http://89.169.148.143:8000";
