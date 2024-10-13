@@ -1,0 +1,37 @@
+include:
+  - project: pipelines/pipelines
+    ref: master
+    file:
+      [
+        "build.yaml",
+        "deploy.yaml",
+        "rules.yaml"
+      ]
+
+.global-variables:
+  variables:
+    SSH_USER: $ENV_SSH_USER # < Group Project Variable. Don't forget to add it!
+    SSH_HOST: $ENV_SERVER_IP # < Group Project Variable. Don't forget to add it!
+    SSH_PRIVATE_KEY_BASE64: $ENV_PRIVATE_KEY_BASE64 # < Group Project Variable. Don't forget to add it!
+
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  extends:
+    - .build
+    - .rules-merge-or-master
+
+deploy:
+  stage: deploy
+  extends:
+    - .docker_run
+    - .global-variables
+    # Don't use it! Shown for example. Use .rules-master
+    - .rules-master
+  variables:
+    DOCKER_ARGS: -d --restart=unless-stopped
+      -p 80:80
+      -e ENV=PROD
