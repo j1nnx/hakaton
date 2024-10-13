@@ -1,0 +1,459 @@
+@import url(https://db.onlinewebfonts.com/c/1c7f14203d028f1c6f8914508f469cb9?family=Arboria-Book);
+@import url('https://fonts.cdnfonts.com/css/codec-pro');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+}
+/* ----------------------------------------------Main Block-------------------------------------------- */
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100vw;
+    height: 100.1vh;
+    background: rgb(39,37,37);
+    background: linear-gradient(68deg, rgba(39,37,37,1) 0%, rgba(0,64,46,1) 65%);
+}
+
+.main__header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    height: 15%;
+    padding: 16px;
+    padding-right: 10%;
+}
+.main__header-logo {
+    width: 24%;
+}
+.main__header-title {
+    font-family: "Arboria-Book";
+    color: #fff;
+    font-weight: 300;
+    font-size: 32px;
+    position: relative;
+    left: 10px;
+
+    &:before {
+        content: '';
+        width: 100%;
+        height: 1px;
+        background: #fff;
+        position: absolute;
+        top: 45px;
+    }
+}
+.main__header-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 76%;
+}
+
+.main__change-block {
+    width: 100%;
+    height: 85%;
+}
+.change-block__property {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Codec Pro', sans-serif;
+    color: #fff;
+    font-size: 50px;
+    font-weight: 100;
+    height: 48%;
+    width: 100%;
+}
+.line-img {
+    width: 38%;
+    height: 1px;
+}
+.main_change-block-lineOr {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 4%;
+    color: #fff;
+    gap: 10px;
+    font-size: 25px;
+    font-family: 'Codec Pro', sans-serif;
+}
+
+.select-option { 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 48%;
+    height: 75%;
+    background: #145c48;
+    border-radius: 15px;
+    gap: 10px;
+
+    &:hover {
+        background-color: #1a6550;
+    }
+    &:active {
+        background-color: #1a6550;
+    }
+}
+.option-img {
+    width: 80%;
+}
+.text-user {
+    font-size: 30px;
+}
+.text-admin {
+    font-size: 25px;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    min-height: 100%;
+}
+.authLink {
+    display: contents;
+    color: #fff;
+    text-decoration: none;
+}
+
+/* ----------------------------------------------Auth Block-------------------------------------------- */
+.main-auth {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100vw;
+    height: 100.1vh;
+    background: rgb(39,37,37);
+    background: linear-gradient(68deg, rgba(39,37,37,1) 0%, rgba(0,64,46,1) 65%);
+    overflow-y: hidden;
+}
+
+.auth__block {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 70%;
+    height: 55%;
+    background: #145c48;
+    border-radius: 15px;
+}
+.auth-wrap {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.auth-img {
+    margin-bottom: 8px;
+    width: 60%;
+}
+
+.textAuth-admin {
+    font-family: 'Codec Pro', sans-serif;
+    color: #fff;
+    font-size: 32px;
+    letter-spacing: 2px;
+}
+
+
+.empty-block {
+    height: 20%;
+}
+
+.auth__form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    height: 40%;
+}
+
+.input__optional {
+    font-size: 20px;
+    padding-left: 10px;
+    width: 75%;
+    height: 20%;
+    background: #1a372b;
+    border: none;
+    color: #fff;
+    border-radius: 25px;
+}
+
+.auth__button {
+    background: #4f9481;
+    border: none;
+    color: #fff;
+    width: 28%;
+    height: 15%;
+    border-radius: 5px;
+}
+/* ------------------------------------------------Admin Panel------------------------------------------------------ */
+
+.main-admin {
+    font-family: 'Codec Pro', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100vw;
+    height: 100.1vh;
+    background: rgb(39,37,37);
+    background: linear-gradient(68deg, rgba(39,37,37,1) 0%, rgba(0,64,46,1) 65%);
+    
+}
+.main__AdminWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 88%;
+}
+
+.main__header-title-admin {
+    border: none;
+    width: 100%;
+    font-size: 30px;
+    text-align: center;
+    color: #fff;
+}
+
+.before__disable {
+    padding: 8px;
+    border-radius: 15px;
+    background: #145c48;
+    &:before {
+        display: none;
+    }
+}
+
+.setting-text {
+    color: #fff;
+    font-size: 24px;
+    text-align: center;
+    position: relative;
+    margin-bottom: 15px;
+}
+.fz-long {
+    font-size: 26px;
+}
+.member-list-text {
+    color: #a8a0a0;
+    font-size: 20px;
+}
+
+.before1 {
+    &:before {
+        content: '';
+        background: url('./image/line.png');
+        width: 100%;
+        height: 2px;
+        position: absolute;
+        top: 25px;
+    }
+}
+.main__table {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    gap: 6px;
+}
+
+.before2 {
+    &:before {
+        content: '';
+        background: url('./image/line.png');
+        width: 84%;
+        height: 2px;
+        position: absolute;
+        top: 25px;
+    }
+}
+
+.table-list__legend {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    background: #07231b;
+    width: 100%;
+    height: 6%;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    color: #fff;
+    text-align: center;
+}
+
+.main__UserPanel-name {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 12%;
+    background: #145c48;
+    border-top-left-radius: 45px;
+    border-top-right-radius: 45px;
+    gap: 10px;
+}
+.admin-img {
+    width: 12%;
+    height: 75%;
+}
+
+.AdminName-text {
+    font-size: 28px;
+    color: #fff;
+}
+.font-weight__bold {
+    font-weight: bold;
+    color: #fff;
+}
+
+.main__table-list {
+    list-style-type: none;
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+}
+.table-li {
+    width: 100%;
+    height: 5%;
+    color: #fff;
+    font-size: 18px;
+    text-align: center;
+}
+
+.green-white {
+    width: 100%;
+    height: 100%;
+    background: #1a372b;
+}
+
+.green-black {
+    width: 100%;
+    height: 100%;
+    background: #07231b;
+    position: relative;
+}
+
+.UlListWrapper {
+    width: 90%;
+    height: 100%;
+    padding-bottom: 10px;
+}
+
+.position {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.legend-option {
+    width: calc(100% / 4);
+}
+.flex-end {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-self: center;
+}
+
+
+
+
+@media (min-width: 900px) and (max-width: 950px){
+
+    .main_change-block-lineOr {
+        display: none;
+    }
+
+    .main__change-block {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 40px;
+    }
+
+    .select-option {
+        width: 100%;
+    }
+
+    .main__header-title {
+        font-size: 54px;
+        &:before {
+            top: 70px;
+        }
+    }
+
+    .text-admin {
+        font-size: 44px;
+    }
+
+    .text-user {
+        font-size: 44px;
+    }
+}
+
+
+@media (min-width: 760px) {
+    .main_change-block-lineOr {
+        display: none;
+    }
+
+    .main__change-block {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .main__header-logo {
+        width: 15%;
+    }
+
+    .change-block-user__select {
+
+    }
+
+    .option-img {
+        width: 100%;
+    }
+}
+
+
+
+
+
